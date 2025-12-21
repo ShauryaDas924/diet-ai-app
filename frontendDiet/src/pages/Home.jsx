@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./Home.css";
+import "./global.css";
 import foodIllustration from "../assets/food.png"; 
 
 export default function Home() {
