@@ -6,6 +6,7 @@ import os
 import json
 import random
 from dotenv import load_dotenv
+from logging_config import logger
 
 load_dotenv()
 
@@ -328,6 +329,7 @@ def _openai_generate_meal_ideas(profile: Dict) -> Optional[List[Dict]]:
 # -----------------------------
 
 def generate_meal_plan(user_profile: Dict) -> List[Dict]:
+    logger.info("generate_meal_plan called")
     """
     Real-app behavior:
     - Try AI (if configured)
@@ -335,6 +337,7 @@ def generate_meal_plan(user_profile: Dict) -> List[Dict]:
     """
     ai_plan = _openai_generate_meal_ideas(user_profile)
     if ai_plan:
+        logger.info("AI-generated meal plan accepted")
         # Ensure basic safety check before returning
         safe = []
         for m in ai_plan:

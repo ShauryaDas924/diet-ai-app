@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from logging_config import logger
 
 # Internal modules
 import nutrition as nut
@@ -129,7 +130,31 @@ class StoreMealMatchRequest(BaseModel):
     store: Dict[str, Any]
     meals: List[Dict[str, Any]]
 
+# -----------------------------
+# Rate limiting (simple IP-based)
+# -----------------------------
 
+import time
+from fastapi import Request, Depends
+
+_RATE_LIMIT = {}
+RATE_LIMIT_WINDOW = 60      # seconds
+RATE_LIMIT_MAX = 30         # requests per IP per window
+
+def rate_limit(request: Request):
+    ip = request.client.host
+    now = time.time()
+
+    window = _RATE_LIMIT.get(ip, [])
+    window = [t for t in window if now - t < RATE_LIMIT_WINDOW]
+    if not window:
+        _RATE_LIMIT.pop(ip, None)
+    if len(window) >= RATE_LIMIT_MAX:
+        logger.warning(f"Rate limit exceeded for IP {ip}")
+        raise HTTPException(status_code=429, detail="Too many requests")
+
+    window.append(now)
+    _RATE_LIMIT[ip] = window
 # -----------------------------
 # Meta / Health
 # -----------------------------
@@ -180,7 +205,7 @@ def macros(profile: UserProfile):
 # Meal planning (AI)
 # -----------------------------
 
-@app.post("/meal-plan")
+@app.post("/meal-plan", dependencies=[Depends(rate_limit)])
 def meal_plan(req: MealPlanRequest):
     try:
         meals = diet_ai.generate_meal_plan(req.user_profile)
@@ -196,7 +221,7 @@ def meal_plan(req: MealPlanRequest):
         raise HTTPException(status_code=500, detail=f"meal-plan failed: {str(e)}")
 
 
-@app.post("/weekly-meal-plan")
+@app.post("/weekly-meal-plan", dependencies=[Depends(rate_limit)])
 def weekly_meal_plan(req: WeeklyMealPlanRequest):
     try:
         weekly = diet_ai.generate_weekly_meal_plan(req.user_profile)
@@ -283,7 +308,7 @@ def diet_compliance(req: DietComplianceRequest):
 # Stores / Maps (REAL Google Places via stores.py)
 # -----------------------------
 
-@app.get("/stores")
+@app.get("/stores", dependencies=[Depends(rate_limit)])
 def stores(
     lat: float = Query(..., description="User latitude"),
     lng: float = Query(..., description="User longitude"),
@@ -291,7 +316,13 @@ def stores(
 ):
     try:
         # Returns live Google Places results enriched with your scoring fields
-        return store_mod.find_stores(lat=lat, lng=lng, radius_km=radius_km)
+        return store_mod.find_stores(
+            lat=lat,
+            lng=lng,
+            meals=None,
+            user_profile=None,
+            radius_km=radius_km,
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"stores lookup failed: {str(e)}")
 

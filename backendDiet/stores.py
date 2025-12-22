@@ -6,6 +6,8 @@ import os
 import requests
 from math import radians, sin, cos, sqrt, atan2
 from dotenv import load_dotenv
+from cache import get as cache_get, set as cache_set
+from logging_config import logger
 
 load_dotenv()
 
@@ -32,6 +34,13 @@ def fetch_nearby_stores(
     lng: float,
     radius_m: int = 5000,
 ) -> List[Dict]:
+    cache_key = f"places:{round(lat,4)}:{round(lng,4)}:{radius_m}"
+    cached = cache_get(cache_key)
+    if cached:
+        logger.info("Google Places cache hit")
+        return cached
+
+    logger.info("Google Places cache miss")
     params = {
         "key": GOOGLE_API_KEY,
         "location": f"{lat},{lng}",
@@ -43,7 +52,9 @@ def fetch_nearby_stores(
     resp.raise_for_status()
     data = resp.json()
 
-    return data.get("results", [])
+    results = data.get("results", [])
+    cache_set(cache_key, results, ttl_seconds=1800)  # 30 min cache
+    return results
 
 # -----------------------------
 # Store Intelligence Layer
@@ -56,6 +67,7 @@ def find_stores(
     user_profile: Optional[Dict] = None,
     radius_km: float = 5.0,
 ) -> List[Dict]:
+    logger.info(f"find_stores called lat={lat}, lng={lng}, radius_km={radius_km}")
     """
     Main store discovery function.
     """
