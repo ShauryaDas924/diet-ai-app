@@ -106,3 +106,107 @@
 .feature-btn:hover {
   background-color: #3f6ae0;
 }
+
+.meals-container {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+  background: #ffffff;
+  text-align: center;
+}
+
+.meals-title {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #1f2a44;
+  margin-bottom: 1.5rem;
+}
+
+/* Date Selector */
+.date-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  background: #f1f4fa;
+  padding: 0.8rem 1.6rem;
+  border-radius: 16px;
+  width: fit-content;
+  margin: 0 auto 2.5rem;
+  font-weight: 600;
+  color: #3f4a63;
+}
+
+.date-selector button {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #4f7cff;
+}
+
+/* Meal Cards */
+.meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.meal-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.meal-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.meal-icon {
+  font-size: 2.4rem;
+}
+
+.meal-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1f2a44;
+}
+
+.meal-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Buttons */
+.add-food-btn {
+  background-color: #4f7cff;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.3rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quick-add-btn {
+  margin-top: 3rem;
+  background-color: #4f7cff;
+  color: white;
+  border: none;
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 16px;
+  cursor: pointer;
+}
