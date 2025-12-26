@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./global.css";
-import foodIllustration from "../assets/food.png"; 
+import "../styles/globals.css"
 
 export default function Home() {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ export default function Home() {
 
       <button
         className="get-started-btn"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/")}
       >
         Get Started
       </button>

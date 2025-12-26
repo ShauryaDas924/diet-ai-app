@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./global.css";
+import "../styles/globals.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -21,37 +21,36 @@ export default function Dashboard() {
           icon="🔥"
           title="Track Calories"
           description="Monitor how many calories you consume"
-          buttonText="View Calories"
-          onClick={() => navigate("/home")}
+          buttonText="Dashboard"
+          onClick={() => navigate("/dashboard")}
         />
 
         <FeatureCard
           icon="🥗"
           title="Macros Breakdown"
-          description="See the carbs, protein, and fat you eat"
-          buttonText="View Macros"
-          onClick={() => navigate("/nutrition")}
+          description="Coming soon"
+          buttonText="Soon"
+          onClick={() => {}}
         />
 
         <FeatureCard
           icon="🎯"
           title="Set Goals"
-          description="Define calorie and nutrient targets"
-          buttonText="Set Goals"
-          onClick={() => navigate("/profile")}
+          description="Coming soon"
+          buttonText="Soon"
+          onClick={() => {}}
         />
       </div>
     </div>
   );
 }
+
 function FeatureCard({ icon, title, description, buttonText, onClick }) {
   return (
     <div className="feature-card">
       <div className="feature-icon">{icon}</div>
-
       <h3>{title}</h3>
       <p>{description}</p>
-
       <button className="feature-btn" onClick={onClick}>
         {buttonText}
       </button>

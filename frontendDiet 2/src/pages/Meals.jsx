@@ -1,5 +1,7 @@
 import { useState } from "react";
-import "./Meals.css";
+import "../styles/globals.css";
+import MealCard from "../components/MealCard";
+import MealPlanGrid from "../components/MealPlanGrid";
 
 export default function Meals() {
   const [date, setDate] = useState(new Date());
@@ -22,6 +24,8 @@ export default function Meals() {
         ))}
       </div>
 
+      <MealPlanGrid />
+
       <button className="quick-add-btn">+ Quick Add</button>
     </div>
   );
@@ -37,23 +41,21 @@ function DateSelector({ date, setDate }) {
 
   return (
     <div className="date-selector">
-      <button onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))}>
+      <button
+        onClick={() =>
+          setDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 1))
+        }
+      >
         ‹
       </button>
       <span>Today – {formatDate(date)}</span>
-      <button onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>
+      <button
+        onClick={() =>
+          setDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() + 1))
+        }
+      >
         ›
       </button>
     </div>
-  );
-}
-import MealPlanGrid from "./MealPlanGrid";
-
-function Meals() {
-  return (
-    <>
-      {/* Existing meal logging UI */}
-      <MealPlanGrid />
-    </>
   );
 }
