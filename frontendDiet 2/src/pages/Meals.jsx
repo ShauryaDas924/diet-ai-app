@@ -1,43 +1,59 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import "./Meals.css";
 
 export default function Meals() {
-const [meals, setMeals] = useState([]);
+  const [date, setDate] = useState(new Date());
 
-const [mealInput, setMealInput] = useState('');
+  const meals = [
+    { key: "breakfast", label: "Breakfast", icon: "🍳" },
+    { key: "lunch", label: "Lunch", icon: "🥪" },
+    { key: "dinner", label: "Dinner", icon: "🍽️" },
+  ];
 
-const addMeal = () => {
-    if (mealInput.trim()) {
-        setMeals([...meals, { id: Date.now(), text: mealInput }]);
-        setMealInput('');
-    }
-};
+  return (
+    <div className="meals-container">
+      <h1 className="meals-title">Log Meals</h1>
 
-    return (
-        <div className="meals-container">
-            <h1>Meals</h1>
-            <p>Welcome to the Meals page</p>
-            
-            <div className="meal-input-section">
-                <input
-                    type="text"
-                    value={mealInput}
-                    onChange={(e) => setMealInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addMeal()}
-                    placeholder="Enter your meal"
-                />
-                <button onClick={addMeal}>Add Meal</button>
-            </div>
+      <DateSelector date={date} setDate={setDate} />
 
-            <ul className="meals-list">
-                {meals.map((meal) => (
-                    <li key={meal.id}>{meal.text}</li>
-                ))}
-            </ul>
+      <div className="meals-list">
+        {meals.map((meal) => (
+          <MealCard key={meal.key} meal={meal} />
+        ))}
+      </div>
 
-            <div className="date-display">
-                <p>Date: {new Date().toLocaleDateString()}</p>
-            </div>
-            </ul>
-        </div>
-    );
+      <button className="quick-add-btn">+ Quick Add</button>
+    </div>
+  );
+}
+
+function DateSelector({ date, setDate }) {
+  const formatDate = (d) =>
+    d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
+  return (
+    <div className="date-selector">
+      <button onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))}>
+        ‹
+      </button>
+      <span>Today – {formatDate(date)}</span>
+      <button onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>
+        ›
+      </button>
+    </div>
+  );
+}
+import MealPlanGrid from "./MealPlanGrid";
+
+function Meals() {
+  return (
+    <>
+      {/* Existing meal logging UI */}
+      <MealPlanGrid />
+    </>
+  );
 }
